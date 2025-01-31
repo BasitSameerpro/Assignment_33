@@ -37,23 +37,25 @@ app.use(errorHandler);
 // Connect to database and start server
 const PORT = process.env.PORT || 3000;
 
-// Wrap database connection in a function that can be called after deployment
+// Modified startServer function
 const startServer = async () => {
   try {
     await connectDB();
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
+    if (process.env.NODE_ENV !== 'production') {
+      app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+      });
+    }
   } catch (error) {
     console.error("Failed to connect to database:", error);
-    process.exit(1);
+    // Don't exit process in production
+    if (process.env.NODE_ENV !== 'production') {
+      process.exit(1);
+    }
   }
 };
 
-// Check if we're running directly (not being imported)
-if (require.main === module) {
-  startServer();
-}
+// Call startServer immediately for Vercel
+startServer();
 
-// Export for Vercel serverless deployment
 module.exports = app;

@@ -17,6 +17,7 @@
     }
   ],
   "env": {
-    "PORT": "3000"
+    "PORT": "2060",
+    "NODE_ENV": "production"
   }
 }
